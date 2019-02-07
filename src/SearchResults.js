@@ -6,18 +6,22 @@ class SearchResults extends Component {
 		super(props);
 
 		this.organiseResults = this.organiseResults.bind(this);
+		this.clickResult = this.clickResult.bind(this);
 	}
 
 	organiseResults(results) {
-		console.log("trigger");
 		return results.map((location, ind) => {
 			return(
-				<li className="result" key={ind}>
+				<li className="result" key={ind} onClick={(e) => this.clickResult(location.metroArea.id, e)}>
 					<div className="city">{location.city.displayName}, </div>
 					<div className="country">{location.city.country.displayName}</div>
 				</li>
 			);
 		});
+	}
+
+	clickResult(id) {
+		this.props.locationSearch(id)
 	}
 
 	render() {

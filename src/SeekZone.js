@@ -48,6 +48,7 @@ class SeekZone extends Component {
 				<div id="searchResults">
 					<SearchResults 
 						apiResults={this.state.searchResults}
+						locationSearch={this.props.locationSearch}
 					/>
 				</div>
 			)

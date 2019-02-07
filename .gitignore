@@ -11,6 +11,9 @@
 # assets
 /assets
 
+# secrets
+/src/SECRET-api.js
+
 # production
 /build
 

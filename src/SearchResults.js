@@ -2,25 +2,29 @@ import React, { Component } from 'react';
 import './SearchResults.css';
 
 class SearchResults extends Component {
+	constructor(props) {
+		super(props);
+
+		this.organiseResults = this.organiseResults.bind(this);
+	}
+
+	organiseResults(results) {
+		console.log("trigger");
+		return results.map((location, ind) => {
+			return(
+				<li className="result" key={ind}>
+					<div className="city">{location.city.displayName}, </div>
+					<div className="country">{location.city.country.displayName}</div>
+				</li>
+			);
+		});
+	}
+
 	render() {
-		const templateResults = (
-			<div id="search-results">
-				<div className="result">
-					<div className="city">Gothenburg, </div>
-					<div className="country">Sweden</div>
-				</div>
-				<div className="result">
-					<div className="city">Gothenburg, </div>
-					<div className="country">USA</div>
-				</div>
-				<div className="result">
-					<div className="city">Gotham, </div>
-					<div className="country">USA</div>
-				</div>
-			</div>
-		);
-		return (
-			<div>{templateResults}</div>
+		return(
+			<ul id="search-results">
+				{this.organiseResults(this.props.apiResults)}
+			</ul>
 		);
 	}
 }

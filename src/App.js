@@ -13,7 +13,7 @@ class App extends Component {
          
         </header>
         <SeekZone />
-        <DataViz />
+        {/* <DataViz /> */}
       </div>
     );
   }

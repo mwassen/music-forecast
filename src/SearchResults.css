@@ -1,5 +1,5 @@
 #search-results {
-	background-color: darkcyan;
+	background-color: white;
 	margin: 5px 0 5px 0;
 	padding: 5px 0 5px 0;
 }
@@ -10,10 +10,11 @@
 	align-items: flex-end;
 	justify-content: center;
 	margin: 10px 10px 10px 10px;
+	color:black;
 }
 
 .result:hover {
-	background-color: hsla(0, 0%, 95%, 0.2);
+	background-color: hsla(0, 0%, 0%, 0.3);
 	cursor: pointer;
 }
 

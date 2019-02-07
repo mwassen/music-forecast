@@ -12,6 +12,7 @@
 .App-logo {
   /* animation: App-logo-spin infinite 20s linear; */
   pointer-events: none;
+  user-select: none;
   height: 75px;
   stroke-miterlimit: 10;
 }

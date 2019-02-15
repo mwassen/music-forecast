@@ -13,9 +13,12 @@
 
 # secrets
 /src/SECRET-api.js
+.env
 
 # production
 /build
+.prettierrc
+.eslintrc.json
 
 # misc
 .DS_Store

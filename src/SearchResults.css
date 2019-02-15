@@ -1,25 +1,26 @@
 #search-results {
-	background-color: white;
-	margin: 5px 0 5px 0;
-	padding: 5px 0 5px 0;
+  background-color: white;
+  margin: 0px 0 5px 0;
+  padding: 5px 0 5px 0;
 }
 
 .result {
-	display: flex;
-	flex-direction: row;
-	align-items: flex-end;
-	justify-content: center;
-	margin: 10px 10px 10px 10px;
-	color:black;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  margin: 10px 10px 10px 10px;
+  height: 40px;
+  color: black;
 }
 
 .result:hover {
-	background-color: hsla(0, 0%, 0%, 0.3);
-	cursor: pointer;
+  background-color: hsla(0, 0%, 0%, 0.3);
+  cursor: pointer;
 }
 
 .city {
-	font-size: 18px;
-	font-weight: 600;
-	margin-right: 3px;
+  font-size: 18px;
+  font-weight: 600;
+  margin-right: 3px;
 }

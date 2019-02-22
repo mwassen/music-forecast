@@ -9,132 +9,128 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      stats: {}
+      stats: null
     };
     this.locationSearch = this.locationSearch.bind(this);
   }
 
   locationSearch(locationId) {
-    const dataForViz = {};
-    const songkickURL =
-      "https://api.songkick.com/api/3.0/metro_areas/" +
-      locationId +
-      "/calendar.json?apikey=" +
-      APIkeys.songkick;
+    const dataForViz = [];
+    const maxPages = 10;
 
-    // API call to songkick for concerts in selected metro area
-    fetch(songkickURL)
-      .then(response => {
-        if (response.status !== 200) {
-          console.log(
-            "Looks like there was a problem with the SongKick metro area events API. Status Code: " +
-              response.status
-          );
-          return;
-        } else return response.json();
-      })
+    // Run API calls
+    fetchSongkick()
       .then(data => {
         // Handle multiple artist events
-        // console.log(data);
-        // const artistNames = [];
-        data.resultsPage.results.event.forEach(event => {
-          // Create data structure for event information
-          if (dataForViz[event.start.date]) {
-            dataForViz[event.start.date].push({
-              name: event.displayName,
-              artists: event.performance,
-              link: event.uri
-            });
-          } else {
-            dataForViz[event.start.date] = [
-              {
+        data.forEach(page => {
+          if (page.resultsPage)
+            page.resultsPage.results.event.forEach(event => {
+              // Create data structure for event information
+              dataForViz.push({
+                date: event.start.date,
                 name: event.displayName,
                 artists: event.performance,
                 link: event.uri
-              }
-            ];
-          }
-
-          // event.performance.forEach(performer => {
-          //   artistNames.push(performer.displayName);
-          // });
-        });
-
-        // console.log(dataForViz);
-
-        const dates = Object.keys(dataForViz);
-        // console.log(dates);
-
-        const fetches = [];
-
-        dates.forEach(date => {
-          dataForViz[date].forEach(event => {
-            event.artists.forEach(artist => {
-              // console.log(artist);
-              fetches.push(fetchLastFm(artist));
-            });
-          });
-        });
-
-        function fetchLastFm(artist) {
-          const lastfmURL =
-            "http://ws.audioscrobbler.com/2.0/?method=artist.gettoptags&artist=" +
-            artist.displayName +
-            "&api_key=" +
-            APIkeys.lastfm +
-            "&format=json";
-          return fetch(lastfmURL).then(response => {
-            if (response.status !== 200) {
-              console.log(
-                "Looks like there was a problem with the Last.fm API. Status Code: " +
-                  response.status
-              );
-              return;
-            } else
-              return response.json().then(data => {
-                if (data.toptags) {
-                  artist.topGenres = data.toptags.tag;
-                }
               });
+            });
+        });
+        const fetches = [];
+        dataForViz.forEach(event => {
+          event.artists.forEach(artist => {
+            fetches.push(fetchLastFm(artist));
           });
-        }
-
+        });
         return Promise.all(fetches);
-
-        // Query last.fm for tags for all artists
-        // const artists = artistNames.map(artist => {
-        //   const lastfmURL =
-        //     "http://ws.audioscrobbler.com/2.0/?method=artist.gettoptags&artist=" +
-        //     artist +
-        //     "&api_key=" +
-        //     APIkeys.lastfm +
-        //     "&format=json";
-        //   return fetch(lastfmURL).then(response => {
-        //     if (response.status !== 200) {
-        //       console.log(
-        //         "Looks like there was a problem with the Last.fm API. Status Code: " +
-        //           response.status
-        //       );
-        //       return;
-        //     } else return response.json();
-        //   });
-        // });
       })
       .then(() => {
+        // console.log("API done!!");
         this.setState({
           stats: dataForViz
         });
       });
+
+    // API FUNCTIONS
+    // Query Songkick API for set amount of pages
+    function fetchSongkick() {
+      const songkickURL =
+        "https://api.songkick.com/api/3.0/metro_areas/" +
+        locationId +
+        "/calendar.json?apikey=" +
+        APIkeys.songkick;
+
+      return baseFetch(1).then(data => {
+        const songkickReqs = [];
+        const totalEntries = data.resultsPage.totalEntries;
+        const reqPages =
+          totalEntries < maxPages * 50
+            ? Math.ceil(totalEntries / 50)
+            : maxPages;
+
+        songkickReqs.push(data);
+        for (let i = 2; i <= reqPages; i++) {
+          songkickReqs.push(baseFetch(i));
+        }
+        return Promise.all(songkickReqs);
+      });
+
+      function baseFetch(page) {
+        const pageParam = "&page=" + page;
+        return fetch(songkickURL + pageParam).then(response => {
+          if (response.status !== 200) {
+            console.log(
+              "Looks like there was a problem with the SongKick metro area events API. Status Code: " +
+                response.status
+            );
+            return;
+          } else return response.json();
+        });
+      }
+    }
+
+    // Query LastFM API for genre tags for set artist
+    function fetchLastFm(artist) {
+      const lastfmURL =
+        "http://ws.audioscrobbler.com/2.0/?method=artist.gettoptags&artist=" +
+        artist.displayName +
+        "&api_key=" +
+        APIkeys.lastfm +
+        "&format=json";
+
+      return fetch(lastfmURL).then(response => {
+        if (response.status !== 200) {
+          console.log(
+            "Looks like there was a problem with the Last.fm API. Status Code: " +
+              response.status
+          );
+          return;
+        } else
+          return response.json().then(data => {
+            if (data.toptags) {
+              artist.topGenres = data.toptags.tag;
+            }
+          });
+      });
+    }
   }
 
   render() {
+    function showViz(data) {
+      if (data) {
+        return (
+          <div className="data-visuals">
+            <DataViz dataSet={data} />
+          </div>
+        );
+      }
+    }
+
     return (
       <div className="App">
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
         </header>
         <SeekZone locationSearch={this.locationSearch} />
-        <DataViz dataSet={this.state.stats} />
+        {showViz(this.state.stats)}
       </div>
     );
   }

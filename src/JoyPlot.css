@@ -1,0 +1,20 @@
+.genre-group:hover {
+}
+
+.genre-bar {
+  fill: grey;
+  stroke: white;
+  /* stroke-alignment: outside; */
+}
+
+.genre-bar:hover {
+  pointer-events: bounding-box;
+  fill: coral;
+}
+
+.genre-label {
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 11px;
+  fill: white;
+  text-anchor: end;
+}

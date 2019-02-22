@@ -47,6 +47,10 @@ class SeekZone extends Component {
                 this.setState({
                   searchResults: data.resultsPage.results.location.slice(0, 7)
                 });
+              } else {
+                this.setState({
+                  searchResults: null
+                });
               }
             });
         }
@@ -77,7 +81,7 @@ class SeekZone extends Component {
           />
         </div>
       );
-    } else results = false;
+    } else results = null;
 
     return (
       <div id="seek">

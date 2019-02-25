@@ -17,7 +17,7 @@
 .env
 
 # production
-/build
+build/
 .prettierrc
 .eslintrc.json
 

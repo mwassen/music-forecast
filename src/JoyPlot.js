@@ -22,6 +22,7 @@ class JoyPlot extends Component {
       const parseTime = d3.timeParse("%Y-%m-%d");
       // const formatTime = d3.timeFormat("%Y-%m-%d");
 
+      // Nest data according to genre and dates
       const nested = d3
         .nest()
         .key(d => d.genre)
@@ -43,7 +44,14 @@ class JoyPlot extends Component {
               })
           };
         })
-        .entries(dataset);
+        .entries(dataset)
+        .sort((a, b) => {
+          // Organise after genre cumulative weight
+          return (
+            d3.sum(b.values, d => d.value.weight) -
+            d3.sum(a.values, d => d.value.weight)
+          );
+        });
 
       // console.log(nested);
 
@@ -76,8 +84,8 @@ class JoyPlot extends Component {
       const areaCalc = d3
         .area()
         .x(d => xScale(new Date(d.key)))
-        .y1(d => yScale(d.value.weight))
-        .y0(yScale(0));
+        .y1(d => yScale(d.value.weight / 2))
+        .y0(d => yScale(-d.value.weight / 2));
 
       function formatZeroValues(nestedData, dateExtent) {
         function dateCompare(date1, date2) {
@@ -127,7 +135,7 @@ class JoyPlot extends Component {
 
           formattedData.push(newGenre);
         });
-        console.log(formattedData);
+        // console.log(formattedData);
 
         return formattedData;
       }

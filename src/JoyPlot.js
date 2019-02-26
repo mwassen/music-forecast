@@ -131,7 +131,7 @@ class JoyPlot extends Component {
         .range([0, height / 40 - 5]);
 
       // This could be calculated from xExtent somehow....
-      const rectCount = 500;
+      const rectCount = 200;
 
       usableData.forEach(genre => {
         genre.yScale = d3

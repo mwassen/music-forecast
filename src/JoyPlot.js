@@ -177,9 +177,9 @@ class JoyPlot extends Component {
             <g key={rect.id} className={empty ? "empty-bar" : "data-bar"}>
               <rect
                 x={rect.x}
-                y={rect.y <= 0 ? -noValue / 2 : -rect.y}
+                y={empty ? -noValue / 2 : -rect.y}
                 width={rect.width}
-                height={rect.height <= 0 ? noValue : rect.height}
+                height={empty ? noValue : rect.height}
               />
             </g>
           );

@@ -111,29 +111,40 @@ class JoyPlot extends Component {
       const usableData = formatZeroValues(nested, xExtent);
 
       // Calculate yExtent from formatted values
-      const yExtent = [
-        d3.min(usableData, d => {
-          return d3.min(d.values, v => v.value.weight);
-        }),
-        d3.max(usableData, d => {
-          return d3.max(d.values, v => v.value.weight);
-        })
-      ];
+      // const yExtent = [
+      //   d3.min(usableData, d => {
+      //     return d3.min(d.values, v => v.value.weight);
+      //   }),
+      //   d3.max(usableData, d => {
+      //     return d3.max(d.values, v => v.value.weight);
+      //   })
+      // ];
 
       const xScale = d3
         .scaleTime()
         .domain(xExtent)
         .range([0, width]);
 
-      const yScale = d3
-        .scaleLinear()
-        .domain(yExtent)
-        .range([0, height / 40 - 5]);
+      // const yScale = d3
+      //   .scaleLinear()
+      //   .domain(yExtent)
+      //   .range([0, height / 40 - 5]);
 
       // This could be calculated from xExtent somehow....
       const rectCount = 200;
 
       usableData.forEach(genre => {
+        console.log(genre);
+        const yExtent = [
+          d3.min(genre.values, d => d.value.weight),
+          d3.max(genre.values, d => d.value.weight)
+        ];
+
+        const yScale = d3
+          .scaleLinear()
+          .domain(yExtent)
+          .range([0, height / 40 - 5]);
+
         genre.yScale = d3
           .scaleLinear()
           .domain(genre.values.map(d => xScale(new Date(d.key))))

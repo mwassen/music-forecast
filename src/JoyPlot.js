@@ -53,39 +53,7 @@ class JoyPlot extends Component {
           );
         });
 
-      // console.log(nested);
-
-      // function addEmpties(data, timeExtent) {}
-
       const xExtent = d3.extent(dataset, d => parseTime(d.date));
-
-      const yExtent = [
-        d3.min(nested, d => {
-          return d3.min(d.values, v => v.value.weight);
-        }),
-        d3.max(nested, d => {
-          return d3.max(d.values, v => v.value.weight);
-        })
-      ];
-
-      const xScale = d3
-        .scaleTime()
-        .domain(xExtent)
-        .range([0, width]);
-      // const xAxis = d3.axisBottom(xScale).tickFormat(formatTime);
-
-      const yScale = d3
-        .scaleLinear()
-        .domain(yExtent)
-        .range([height / 20 - 5, 0]);
-
-      // console.log(nested);
-
-      const areaCalc = d3
-        .area()
-        .x(d => xScale(new Date(d.key)))
-        .y1(d => yScale(d.value.weight / 2))
-        .y0(d => yScale(-d.value.weight / 2));
 
       function formatZeroValues(nestedData, dateExtent) {
         function dateCompare(date1, date2) {
@@ -93,7 +61,7 @@ class JoyPlot extends Component {
             date1.getFullYear() === date2.getFullYear() &&
             // getMonth is 0-indexed
             date1.getMonth() === date2.getMonth() &&
-            date1.getDate() == date2.getDate()
+            date1.getDate() === date2.getDate()
           );
         }
 
@@ -140,22 +108,98 @@ class JoyPlot extends Component {
         return formattedData;
       }
 
-      return formatZeroValues(nested, xExtent).map((genre, index) => {
+      const usableData = formatZeroValues(nested, xExtent);
+
+      // Calculate yExtent from formatted values
+      const yExtent = [
+        d3.min(usableData, d => {
+          return d3.min(d.values, v => v.value.weight);
+        }),
+        d3.max(usableData, d => {
+          return d3.max(d.values, v => v.value.weight);
+        })
+      ];
+
+      const xScale = d3
+        .scaleTime()
+        .domain(xExtent)
+        .range([0, width]);
+
+      const yScale = d3
+        .scaleLinear()
+        .domain(yExtent)
+        .range([0, height / 40 - 5]);
+
+      // This could be calculated from xExtent somehow....
+      const rectCount = 500;
+
+      usableData.forEach(genre => {
+        genre.yScale = d3
+          .scaleLinear()
+          .domain(genre.values.map(d => xScale(new Date(d.key))))
+          .range(genre.values.map(d => yScale(d.value.weight)));
+
+        genre.xScale = d3
+          .scaleBand()
+          .domain(d3.range(rectCount))
+          .paddingInner(0)
+          .range([0, width]);
+      });
+
+      // console.log(usableData);
+
+      function calcWaveRects(genre) {
+        // console.log(genre);
+        return d3.range(rectCount).map((rect, ind) => {
+          const x = genre.xScale(rect);
+          const width = genre.xScale.bandwidth();
+          const y = genre.yScale(x);
+          const height = y * 2;
+          const id = genre.key + "-" + ind;
+
+          // console.log(y);
+
+          return {
+            x,
+            width,
+            y,
+            height,
+            id
+          };
+        });
+      }
+
+      function drawWaveRects(rects) {
+        return rects.map(rect => {
+          const empty = rect.y <= 0;
+          const noValue = 0.2;
+          return (
+            <g key={rect.id} className={empty ? "empty-bar" : "data-bar"}>
+              <rect
+                x={rect.x}
+                y={rect.y <= 0 ? -noValue / 2 : -rect.y}
+                width={rect.width}
+                height={rect.height <= 0 ? noValue : rect.height}
+              />
+            </g>
+          );
+        });
+      }
+
+      // console.log(calcWaveRects(usableData[0]));
+
+      return usableData.map((genre, index) => {
         return (
           <g
             key={genre.key}
             className="genre-group"
-            transform={`translate(${0}, ${index * (height / 20)})`}
+            transform={`translate(${0}, ${(index + 1) * (height / 20)})`}
           >
-            <text
-              x={margin.left - 10}
-              y={height / 20 - 5}
-              className="genre-label"
-            >
+            <text x={margin.left - 10} y="2" className="genre-label">
               {genre.key}
             </text>
             <g transform={`translate(${margin.left}, 0)`}>
-              <path className="genre-bar" d={areaCalc(genre.values)} />
+              {drawWaveRects(calcWaveRects(genre))}
             </g>
           </g>
         );

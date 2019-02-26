@@ -1,16 +1,18 @@
 .genre-group:hover {
 }
 
-.genre-bar {
-  fill: grey;
-  stroke: white;
+.data-bar {
+  fill: rgba(167, 167, 167, 0.8);
   /* stroke-alignment: outside; */
 }
+.empty-bar {
+  fill: rgba(167, 167, 167, 0.3);
+}
 
-.genre-bar:hover {
+/* .genre-bar:hover {
   pointer-events: bounding-box;
   fill: coral;
-}
+} */
 
 .genre-label {
   font-family: Helvetica, Arial, sans-serif;

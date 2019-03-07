@@ -11,21 +11,40 @@ class SearchResults extends Component {
 
   organiseResults(results) {
     return results.map((location, ind) => {
+      const locationString = location.city.state
+        ? location.city.displayName +
+          ", " +
+          location.city.state.displayName +
+          ", " +
+          location.city.country.displayName
+        : location.city.displayName + ", " + location.city.country.displayName;
+
       return (
         <li
           className="result"
           key={ind}
-          onClick={e => this.clickResult(location.metroArea.id, e)}
+          onClick={e =>
+            this.clickResult(location.metroArea.id, locationString, e)
+          }
         >
           <div className="city">{location.city.displayName}, </div>
+          {stateInclude(location)}
           <div className="country">{location.city.country.displayName}</div>
         </li>
       );
+
+      function stateInclude(location) {
+        if (location.city.state) {
+          return (
+            <div className="state">{location.city.state.displayName}, </div>
+          );
+        } else return null;
+      }
     });
   }
 
-  clickResult(id) {
-    this.props.locationSearch(id);
+  clickResult(id, string) {
+    this.props.locationSearch(id, string);
     this.props.onResultClick();
   }
 

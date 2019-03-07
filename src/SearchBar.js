@@ -15,7 +15,7 @@ class SearchBar extends Component {
       <div>
         <input
           type="text"
-          placeholder="Select location..."
+          placeholder="Search location..."
           value={this.props.searchText}
           onChange={this.handleSearchBarChange}
         />

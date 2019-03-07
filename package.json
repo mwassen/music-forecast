@@ -4,11 +4,12 @@
   "private": true,
   "dependencies": {
     "d3": "^5.8.2",
-    "lodash": "^4.17.11",
     "nice-color-palettes": "^2.0.0",
-    "react": "^16.7.0",
-    "react-dom": "^16.7.0",
-    "react-scripts": "^2.1.5"
+    "react": "^16.8.4",
+    "react-dom": "^16.8.4",
+    "react-scripts": "^2.1.5",
+    "react-spinners": "^0.5.3",
+    "react-spring": "^8.0.11"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -29,7 +30,7 @@
     "not op_mini all"
   ],
   "devDependencies": {
-    "eslint-config-prettier": "^4.0.0",
+    "eslint-config-prettier": "^4.1.0",
     "eslint-plugin-import": "^2.16.0",
     "eslint-plugin-jsx-a11y": "^6.2.1",
     "eslint-plugin-prettier": "^3.0.1",

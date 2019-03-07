@@ -1,6 +1,7 @@
 import React from "react";
 import * as d3 from "d3";
 import "./JoyPlot.css";
+import { Trail, animated } from "react-spring/renderprops";
 
 class JoyPlot extends React.Component {
   constructor(props) {
@@ -12,6 +13,7 @@ class JoyPlot extends React.Component {
       xScale: null
     };
     this.xAxisRef = React.createRef();
+    // this.genreGraphs = this.genreGraphs.bind(this);
     this.renderAxes = this.renderAxes.bind(this);
   }
 
@@ -25,7 +27,7 @@ class JoyPlot extends React.Component {
 
   renderAxes() {
     const xAxis = d3.axisTop();
-    const intervals = [5];
+    const intervals = [window.innerWidth / 150];
     // const yAxis = d3.axisLeft();
 
     xAxis.tickArguments(intervals);
@@ -40,11 +42,12 @@ class JoyPlot extends React.Component {
 
     const margin = {
       top: 30,
-      right: 100,
+      right: window.innerWidth / 20,
       bottom: 30,
-      left: 150
+      left: window.innerWidth / 20 > 100 ? window.innerWidth : 100
     };
-    const width = 700 - margin.left - margin.right;
+    const width =
+      window.innerWidth - window.innerWidth / 20 - margin.left - margin.right;
     const height = 2000 - margin.top - margin.bottom;
 
     const parseTime = d3.timeParse("%Y-%m-%d");
@@ -159,7 +162,7 @@ class JoyPlot extends React.Component {
     //   .range([0, height / 40 - 5]);
 
     // This could be calculated from xExtent somehow....
-    const rectCount = 200;
+    const rectCount = Math.floor(window.innerWidth / 4);
 
     usableData.forEach(genre => {
       const yExtent = [
@@ -184,28 +187,6 @@ class JoyPlot extends React.Component {
         .range([0, width]);
     });
 
-    // console.log(usableData);
-
-    // function calcWaveRects(genre) {
-    //   // console.log(genre);
-    //   return d3.range(rectCount).map((rect, ind) => {
-    //     const x = genre.xScale(rect);
-    //     const width = genre.xScale.bandwidth();
-    //     const y = genre.yScale(x);
-    //     const height = y * 2;
-    //     const id = genre.key + "-" + ind;
-
-    //     // console.log(y);
-
-    //     return {
-    //       x,
-    //       width,
-    //       y,
-    //       height,
-    //       id
-    //     };
-    //   });
-    // }
     return {
       data: usableData,
       dimensions: {
@@ -304,7 +285,14 @@ class JoyPlot extends React.Component {
                 this.yAxis = r;
               }}
             /> */}
-            <g>{renderGenre(data)}</g>
+            <Trail
+              items={renderGenre(data)}
+              keys={item => item.key + "barz"}
+              from={{ opacity: 0, transform: "translate3d(0,-40px,0)" }}
+              to={{ opacity: 1, transform: "translate3d(0,0px,0)" }}
+            >
+              {item => props => <animated.g style={props}>{item}</animated.g>}
+            </Trail>
             <g
               ref={this.xAxisRef}
               transform={`translate(${dimensions.margin.left}, ${

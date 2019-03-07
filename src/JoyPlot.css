@@ -9,10 +9,10 @@
   fill: rgba(167, 167, 167, 0.3);
 }
 
-/* .genre-bar:hover {
+.data-bar:hover {
   pointer-events: bounding-box;
   fill: coral;
-} */
+}
 
 .genre-label {
   font-size: 11px;

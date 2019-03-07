@@ -6,6 +6,11 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  font-family: Helvetica, Arial, sans-serif;
+}
+
+p {
+  font-size: 10px;
 }
 
 .App-logo {
@@ -34,11 +39,8 @@
   /* padding-top: 20px; */
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.locationName {
+  margin: 20px 0 20px 0;
+  font-weight: 900;
+  font-size: 18px;
 }

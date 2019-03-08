@@ -22,4 +22,5 @@
 
 svg {
   font-family: Helvetica, Arial, sans-serif;
+  user-select: none;
 }

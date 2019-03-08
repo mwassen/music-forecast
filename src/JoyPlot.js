@@ -13,12 +13,65 @@ class JoyPlot extends React.Component {
       xScale: null
     };
     this.xAxisRef = React.createRef();
+    this.brushRef = React.createRef();
     // this.genreGraphs = this.genreGraphs.bind(this);
     this.renderAxes = this.renderAxes.bind(this);
   }
 
   componentDidMount() {
     this.renderAxes();
+
+    this.state.data.forEach((point, ind) => {
+      const topLeft = [
+        this.state.dimensions.margin.left,
+        this.state.dimensions.margin.top +
+          ind * (this.state.dimensions.height / 20) +
+          18
+      ];
+      const bottomRight = [
+        this.state.dimensions.width + this.state.dimensions.margin.left,
+        this.state.dimensions.margin.top +
+          (ind + 1) * (this.state.dimensions.height / 20) +
+          18
+      ];
+
+      const currentBrush = d3
+        .select(this.brushRef.current)
+        .append("g")
+        .attr("id", point.key + "-brush")
+        .attr("class", "genre-brush");
+
+      const genreBrush = d3
+        .brushX()
+        .extent([
+          topLeft, // Top left
+          bottomRight // Bottom right
+        ])
+        .on("end", () => {
+          const [minX, maxX] = d3.event.selection;
+          const range = [
+            this.state.xScale.invert(minX - this.state.dimensions.margin.left),
+            this.state.xScale.invert(maxX - this.state.dimensions.margin.left)
+          ];
+          const events = [];
+
+          point.values.forEach(date => {
+            if (date.value.weight !== 0) {
+              const curDate = new Date(date.key);
+              if (curDate >= range[0] && curDate <= range[1]) {
+                const hitConcerts = date.value.details;
+                hitConcerts.forEach(hit => {
+                  events.push(hit);
+                });
+              }
+            }
+          });
+
+          console.log(events);
+        });
+
+      currentBrush.call(genreBrush);
+    });
   }
 
   componentDidUpdate() {
@@ -27,10 +80,10 @@ class JoyPlot extends React.Component {
 
   renderAxes() {
     const xAxis = d3.axisTop();
-    const intervals = [window.innerWidth / 150];
-    // const yAxis = d3.axisLeft();
+    // const intervals = [window.innerWidth / 150];
+    // // const yAxis = d3.axisLeft();
 
-    xAxis.tickArguments(intervals);
+    // xAxis.tickArguments(intervals);
 
     xAxis.scale(this.state.xScale);
     d3.select(this.xAxisRef.current).call(xAxis);
@@ -183,7 +236,7 @@ class JoyPlot extends React.Component {
       genre.xScale = d3
         .scaleBand()
         .domain(d3.range(rectCount))
-        .paddingInner(0)
+        .paddingInner(0.05)
         .range([0, width]);
     });
 
@@ -299,6 +352,7 @@ class JoyPlot extends React.Component {
                 this.state.dimensions.margin.top
               })`}
             />
+            <g ref={this.brushRef} />
           </svg>
         </div>
       );

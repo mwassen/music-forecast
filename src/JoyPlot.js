@@ -2,6 +2,7 @@ import React from "react";
 import * as d3 from "d3";
 import "./JoyPlot.css";
 import { Trail, animated } from "react-spring/renderprops";
+import DetailsModal from "./DetailsModal";
 
 class JoyPlot extends React.Component {
   constructor(props) {
@@ -10,83 +11,16 @@ class JoyPlot extends React.Component {
       data: {},
       dimensions: {},
       rectCount: null,
-      xScale: null
+      xScale: null,
+      selection: null
     };
+
+    // References for D3 rendering
     this.xAxisRef = React.createRef();
     this.brushRef = React.createRef();
-    // this.genreGraphs = this.genreGraphs.bind(this);
+
     this.renderAxes = this.renderAxes.bind(this);
-  }
-
-  componentDidMount() {
-    this.renderAxes();
-
-    this.state.data.forEach((point, ind) => {
-      const topLeft = [
-        this.state.dimensions.margin.left,
-        this.state.dimensions.margin.top +
-          ind * (this.state.dimensions.height / 20) +
-          18
-      ];
-      const bottomRight = [
-        this.state.dimensions.width + this.state.dimensions.margin.left,
-        this.state.dimensions.margin.top +
-          (ind + 1) * (this.state.dimensions.height / 20) +
-          18
-      ];
-
-      const currentBrush = d3
-        .select(this.brushRef.current)
-        .append("g")
-        .attr("id", point.key + "-brush")
-        .attr("class", "genre-brush");
-
-      const genreBrush = d3
-        .brushX()
-        .extent([
-          topLeft, // Top left
-          bottomRight // Bottom right
-        ])
-        .on("end", () => {
-          const [minX, maxX] = d3.event.selection;
-          const range = [
-            this.state.xScale.invert(minX - this.state.dimensions.margin.left),
-            this.state.xScale.invert(maxX - this.state.dimensions.margin.left)
-          ];
-          const events = [];
-
-          point.values.forEach(date => {
-            if (date.value.weight !== 0) {
-              const curDate = new Date(date.key);
-              if (curDate >= range[0] && curDate <= range[1]) {
-                const hitConcerts = date.value.details;
-                hitConcerts.forEach(hit => {
-                  events.push(hit);
-                });
-              }
-            }
-          });
-
-          console.log(events);
-        });
-
-      currentBrush.call(genreBrush);
-    });
-  }
-
-  componentDidUpdate() {
-    this.renderAxes();
-  }
-
-  renderAxes() {
-    const xAxis = d3.axisTop();
-    // const intervals = [window.innerWidth / 150];
-    // // const yAxis = d3.axisLeft();
-
-    // xAxis.tickArguments(intervals);
-
-    xAxis.scale(this.state.xScale);
-    d3.select(this.xAxisRef.current).call(xAxis);
+    this.clearModal = this.clearModal.bind(this);
   }
 
   static getDerivedStateFromProps(nextProps) {
@@ -104,7 +38,6 @@ class JoyPlot extends React.Component {
     const height = 2000 - margin.top - margin.bottom;
 
     const parseTime = d3.timeParse("%Y-%m-%d");
-    // const formatTime = d3.timeFormat("%Y-%m-%d");
 
     // Nest data according to genre and dates
     const nested = d3
@@ -157,8 +90,6 @@ class JoyPlot extends React.Component {
           values: []
         };
 
-        // console.log(dateExtent);
-
         for (
           let d = new Date(dateExtent[0]);
           d < dateExtent[1];
@@ -187,22 +118,11 @@ class JoyPlot extends React.Component {
 
         formattedData.push(newGenre);
       });
-      // console.log(formattedData);
 
       return formattedData;
     }
 
     const usableData = formatZeroValues(nested, xExtent);
-
-    // Calculate yExtent from formatted values
-    // const yExtent = [
-    //   d3.min(usableData, d => {
-    //     return d3.min(d.values, v => v.value.weight);
-    //   }),
-    //   d3.max(usableData, d => {
-    //     return d3.max(d.values, v => v.value.weight);
-    //   })
-    // ];
 
     const xScale = d3
       .scaleTime()
@@ -252,11 +172,91 @@ class JoyPlot extends React.Component {
     };
   }
 
+  componentDidMount() {
+    this.renderAxes();
+
+    this.state.data.forEach((point, ind) => {
+      const topLeft = [
+        this.state.dimensions.margin.left,
+        this.state.dimensions.margin.top +
+          ind * (this.state.dimensions.height / 20) +
+          18
+      ];
+      const bottomRight = [
+        this.state.dimensions.width + this.state.dimensions.margin.left,
+        this.state.dimensions.margin.top +
+          (ind + 1) * (this.state.dimensions.height / 20) +
+          18
+      ];
+
+      const currentBrush = d3
+        .select(this.brushRef.current)
+        .append("g")
+        .attr("id", point.key + "-brush")
+        .attr("class", "genre-brush");
+
+      const genreBrush = d3
+        .brushX()
+        .extent([
+          topLeft, // Top left
+          bottomRight // Bottom right
+        ])
+        .on("end", () => {
+          if (!d3.event.selection) return;
+          const [minX, maxX] = d3.event.selection;
+          const range = [
+            this.state.xScale.invert(minX - this.state.dimensions.margin.left),
+            this.state.xScale.invert(maxX - this.state.dimensions.margin.left)
+          ];
+          const events = [];
+
+          point.values.forEach(date => {
+            if (date.value.weight !== 0) {
+              const curDate = new Date(date.key);
+              if (curDate >= range[0] && curDate <= range[1]) {
+                const hitConcerts = date.value.details;
+                hitConcerts.forEach(hit => {
+                  events.push(hit);
+                });
+              }
+            }
+          });
+
+          this.setState({
+            selection: {
+              name: point.key,
+              location: this.props.location,
+              events,
+              range: range.map(dates => d3.timeFormat("%B %d, %Y")(dates))
+            }
+          });
+          currentBrush.call(genreBrush.move, null);
+        });
+
+      currentBrush.call(genreBrush);
+    });
+  }
+
+  clearModal() {
+    this.setState({
+      selection: null
+    });
+  }
+
+  componentDidUpdate() {
+    this.renderAxes();
+  }
+
+  renderAxes() {
+    const xAxis = d3.axisTop();
+
+    xAxis.scale(this.state.xScale);
+    d3.select(this.xAxisRef.current).call(xAxis);
+  }
+
   render() {
     const dimensions = this.state.dimensions;
     const rectcount = this.state.rectCount;
-
-    // console.log(calcWaveRects(usableData[0]));
 
     function renderGenre(data) {
       return data.map((genre, index) => {
@@ -333,11 +333,6 @@ class JoyPlot extends React.Component {
               dimensions.margin.bottom
             }
           >
-            {/* <g
-              ref={r => {
-                this.yAxis = r;
-              }}
-            /> */}
             <Trail
               items={renderGenre(data)}
               keys={item => item.key + "barz"}
@@ -354,6 +349,10 @@ class JoyPlot extends React.Component {
             />
             <g ref={this.brushRef} />
           </svg>
+          <DetailsModal
+            exitFunc={this.clearModal}
+            selectedData={this.state.selection}
+          />
         </div>
       );
     } else return null;

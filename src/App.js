@@ -31,7 +31,8 @@ class App extends Component {
       .then(data => {
         // Handle multiple artist events
         data.forEach(page => {
-          if (page.resultsPage)
+          if (page.resultsPage) {
+            if (page.resultsPage.totalEntries === 0) return;
             page.resultsPage.results.event.forEach(event => {
               // Create data structure for event information
               dataForViz.push({
@@ -41,6 +42,7 @@ class App extends Component {
                 link: event.uri
               });
             });
+          }
         });
         const fetches = [];
         dataForViz.forEach(event => {
@@ -123,11 +125,11 @@ class App extends Component {
   }
 
   render() {
-    function showViz(data) {
+    function showViz(data, location) {
       if (data) {
         return (
           <div className="data-visuals">
-            <DataViz dataSet={data} />
+            <DataViz dataSet={data} location={location} />
           </div>
         );
       }
@@ -141,7 +143,7 @@ class App extends Component {
         <SeekZone locationSearch={this.locationSearch} />
         <div className="locationName">{this.state.location}</div>
         <LoadingAnimation active={this.state.loading} />
-        {showViz(this.state.stats)}
+        {showViz(this.state.stats, this.state.location)}
       </div>
     );
   }

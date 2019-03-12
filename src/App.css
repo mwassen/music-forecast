@@ -13,6 +13,10 @@ p {
   font-size: 10px;
 }
 
+.ReactModal__Body--open {
+  overflow-y: hidden;
+}
+
 .App-logo {
   /* animation: App-logo-spin infinite 20s linear; */
   pointer-events: none;

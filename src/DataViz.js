@@ -59,7 +59,10 @@ class DataViz extends Component {
 
     return (
       <div>
-        <JoyPlot dataSet={reOrganise(this.props.dataSet, toptags)} />
+        <JoyPlot
+          dataSet={reOrganise(this.props.dataSet, toptags)}
+          location={this.props.location}
+        />
       </div>
     );
   }

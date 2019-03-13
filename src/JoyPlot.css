@@ -28,6 +28,7 @@ svg {
 a {
   color: inherit;
   text-decoration: inherit;
+  margin-bottom: 20px;
 }
 
 .modal-overlay {
@@ -52,11 +53,21 @@ a {
   padding: 0px 20px 20px 20px;
 }
 
-/* 
 .close-btn {
-  position: fixed;
-  width: 30px;
-} */
+  fill: black;
+  position: absolute;
+  width: 20px;
+  cursor: pointer;
+  top: 0;
+  right: 0;
+  margin: 15px 15px 0px 0px;
+  transition: all 0.2s ease;
+}
+
+.close-btn:hover {
+  fill: sandybrown;
+  transition: all 0.4s ease;
+}
 
 .modal-container {
   /* margin: 20px 20px 20px 20px; */
@@ -103,9 +114,9 @@ a {
 }
 
 .event-box {
-  margin: 10px 0px 10px 0;
   padding: 10px 10px 10px 10px;
   background-color: white;
+  border-radius: 3px;
   cursor: pointer;
   transition: all 0.2s ease;
 }
@@ -121,9 +132,9 @@ a {
   margin-bottom: 8px;
   justify-content: space-between;
 }
-
+/* 
 .event-date {
-}
+} */
 
 .event-genres {
   font-style: italic;

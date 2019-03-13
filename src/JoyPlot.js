@@ -12,6 +12,7 @@ class JoyPlot extends React.Component {
       dimensions: {},
       rectCount: null,
       xScale: null,
+      modal: false,
       selection: null
     };
 
@@ -223,6 +224,7 @@ class JoyPlot extends React.Component {
           });
 
           this.setState({
+            modal: true,
             selection: {
               name: point.key,
               location: this.props.location,
@@ -239,7 +241,7 @@ class JoyPlot extends React.Component {
 
   clearModal() {
     this.setState({
-      selection: null
+      modal: false
     });
   }
 
@@ -268,7 +270,7 @@ class JoyPlot extends React.Component {
               (dimensions.height / 20)})`}
           >
             <text x={dimensions.margin.left - 10} y="3" className="genre-label">
-              {genre.key}
+              {genre.key.toLowerCase()}
             </text>
             <g transform={`translate(${dimensions.margin.left}, 0)`}>
               {drawWaveRects(calcWaveRects(genre, rectcount))}
@@ -317,6 +319,16 @@ class JoyPlot extends React.Component {
     }
 
     const data = this.state.data;
+    // const modal = select => {
+    //   if (select) {
+    //     return (
+    //       <DetailsModal
+    //         exitFunc={this.clearModal}
+    //         selectedData={this.state.selection}
+    //       />
+    //     );
+    //   }
+    // };
 
     if (data) {
       return (
@@ -350,6 +362,7 @@ class JoyPlot extends React.Component {
             <g ref={this.brushRef} />
           </svg>
           <DetailsModal
+            active={this.state.modal}
             exitFunc={this.clearModal}
             selectedData={this.state.selection}
           />

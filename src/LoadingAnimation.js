@@ -7,7 +7,7 @@ class LoadingAnimation extends Component {
     return (
       <div>
         <ScaleLoader color="white" />
-        <p>( loading... this might take a while )</p>
+        {/* <p>( loading... this might take a while )</p> */}
       </div>
     );
   }

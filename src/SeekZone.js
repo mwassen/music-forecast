@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import SearchBar from "./SearchBar";
 import SearchResults from "./SearchResults";
 import "./SeekZone.css";
-import APIkeys from "./SECRET-api";
 
 class SeekZone extends Component {
   constructor(props) {
@@ -26,11 +25,7 @@ class SeekZone extends Component {
         // Callback after updating state - queries the SongKick API
         const query = this.state.searchText;
         if (query !== "") {
-          const URL =
-            "https://api.songkick.com/api/3.0/search/locations.json?query=" +
-            query +
-            "&apikey=" +
-            APIkeys.songkick;
+          const URL = "https://music-forecast.herokuapp.com/locations/" + query;
 
           fetch(URL)
             .then(response => {

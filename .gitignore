@@ -15,10 +15,6 @@
 # serverside
 /serverside/node_modules/
 
-# secrets
-/src/SECRET-api.js
-.env
-
 # production
 build/
 .prettierrc

@@ -12,6 +12,9 @@
 # assets
 /assets
 
+# serverside
+/serverside/node_modules/
+
 # secrets
 /src/SECRET-api.js
 .env

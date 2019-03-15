@@ -1,10 +1,20 @@
-#searchbar {
-  /* margin-bottom: 30px; */
+#seek {
+  /* display: flex;
+  flex-direction: column;
+  align-items: center; */
+  position: relative;
 }
 
 input {
   width: 50vmin;
   height: 40px;
+  border: 3px solid #3690c0;
+  padding: 5px;
+  border-radius: 10px;
+  outline: none;
+  background-color: rgba(0, 0, 0, 0);
+  color: #fff7fb;
   font-size: 20px;
   text-align: center;
+  user-select: none;
 }

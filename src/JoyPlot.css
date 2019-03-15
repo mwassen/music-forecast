@@ -41,6 +41,7 @@ a {
   justify-content: center;
   align-items: center;
   background-color: rgba(15, 15, 15, 0.75);
+  z-index: 10;
 }
 
 .modal-content {
@@ -65,8 +66,8 @@ a {
 }
 
 .close-btn:hover {
-  fill: sandybrown;
-  transition: all 0.4s ease;
+  fill: #a6bddb;
+  transition: all 0.2s ease;
 }
 
 .modal-container {
@@ -122,8 +123,8 @@ a {
 }
 
 .event-box:hover {
-  background-color: sandybrown;
-  transition: all 0.4s ease;
+  background-color: #a6bddb;
+  transition: all 0.2s ease;
 }
 
 .event-header {
@@ -148,7 +149,7 @@ a {
 
 .ReactModal__Overlay {
   opacity: 0;
-  transition: opacity 300ms ease-in-out;
+  transition: opacity 200ms ease-in-out;
 }
 
 .ReactModal__Overlay--after-open {

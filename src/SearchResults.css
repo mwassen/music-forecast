@@ -1,10 +1,12 @@
 #search-results {
-  background-color: white;
-  width: 400px;
+  background-color: #fff7fb;
+  width: 92%;
+  left: 50%;
+  transform: translate(-50%, 0);
   margin: 0px 0 5px 0;
-  padding: 5px 0 5px 0;
+  padding: 0px 0 0px 0;
   position: absolute;
-  z-index: 2;
+  z-index: 3;
 }
 
 .result {
@@ -12,13 +14,14 @@
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  margin: 10px 10px 10px 10px;
+  padding: 5px 0px 5px 0px;
+
   height: 40px;
   color: black;
 }
 
 .result:hover {
-  background-color: hsla(0, 0%, 0%, 0.3);
+  background-color: hsla(0, 0%, 0%, 0.2);
   cursor: pointer;
 }
 

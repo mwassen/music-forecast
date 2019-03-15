@@ -15,7 +15,6 @@ class DetailsModal extends React.Component {
 
   render() {
     const active = this.props.selectedData !== null ? true : false;
-
     const content = active ? (
       <div className="modal-container">
         <svg
@@ -79,12 +78,21 @@ class DetailsModal extends React.Component {
       </div>
     ) : null;
 
+    function checkData(active, selection) {
+      if (active) {
+        if (selection.events.length > 0) {
+          return true;
+        }
+      }
+      return false;
+    }
+
     return (
       <Modal
         className="modal-content"
         overlayClassName="modal-overlay"
-        isOpen={this.props.active}
-        closeTimeoutMS={300}
+        isOpen={checkData(this.props.active, this.props.selectedData)}
+        closeTimeoutMS={200}
         onRequestClose={this.exitModal}
         disableAutoFocus={true}
         appElement={document.getElementById("root")}

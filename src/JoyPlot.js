@@ -3,6 +3,7 @@ import * as d3 from "d3";
 import "./JoyPlot.css";
 import { Trail, animated } from "react-spring/renderprops";
 import DetailsModal from "./DetailsModal";
+import chroma from "chroma-js";
 
 class JoyPlot extends React.Component {
   constructor(props) {
@@ -21,6 +22,7 @@ class JoyPlot extends React.Component {
     this.brushRef = React.createRef();
 
     this.renderAxes = this.renderAxes.bind(this);
+    this.renderBrushes = this.renderBrushes.bind(this);
     this.clearModal = this.clearModal.bind(this);
   }
 
@@ -73,6 +75,7 @@ class JoyPlot extends React.Component {
 
     const xExtent = d3.extent(dataSet, d => parseTime(d.date));
 
+    // Adds missing dates into dataset with zero values
     function formatZeroValues(nestedData, dateExtent) {
       function dateCompare(date1, date2) {
         return (
@@ -96,7 +99,6 @@ class JoyPlot extends React.Component {
           d < dateExtent[1];
           d.setDate(d.getDate() + 1)
         ) {
-          // console.log(d);
           let found = false;
           let curValue;
           genre.values.forEach(date => {
@@ -130,12 +132,20 @@ class JoyPlot extends React.Component {
       .domain(xExtent)
       .range([0, width]);
 
-    // const yScale = d3
-    //   .scaleLinear()
-    //   .domain(yExtent)
-    //   .range([0, height / 40 - 5]);
+    // Global Y scale function used for colouring
+    const globalYScale = d3
+      .scaleLinear()
+      .domain([
+        d3.min(usableData, d => {
+          return d3.min(d.values, v => v.value.weight);
+        }),
+        d3.max(usableData, d => {
+          return d3.max(d.values, v => v.value.weight);
+        })
+      ])
+      .range([0, 1]);
 
-    // This could be calculated from xExtent somehow....
+    // Amount of rectangles making up each genre chart
     const rectCount = Math.floor(window.innerWidth / 4);
 
     usableData.forEach(genre => {
@@ -148,6 +158,11 @@ class JoyPlot extends React.Component {
         .scaleLinear()
         .domain(yExtent)
         .range([0, height / 40 - 5]);
+
+      genre.colorScale = d3
+        .scaleLinear()
+        .domain(genre.values.map(d => xScale(new Date(d.key))))
+        .range(genre.values.map(d => globalYScale(d.value.weight)));
 
       genre.yScale = d3
         .scaleLinear()
@@ -169,13 +184,38 @@ class JoyPlot extends React.Component {
         height
       },
       rectCount,
-      xScale
+      xScale,
+      globalYScale
     };
   }
 
   componentDidMount() {
     this.renderAxes();
 
+    this.renderBrushes();
+
+    // Creates a brush for each genre in dataset
+  }
+
+  clearModal() {
+    this.setState({
+      modal: false
+    });
+  }
+
+  componentDidUpdate() {
+    this.renderAxes();
+    this.renderBrushes();
+  }
+
+  renderAxes() {
+    const xAxis = d3.axisTop();
+
+    xAxis.scale(this.state.xScale);
+    d3.select(this.xAxisRef.current).call(xAxis);
+  }
+
+  renderBrushes() {
     this.state.data.forEach((point, ind) => {
       const topLeft = [
         this.state.dimensions.margin.left,
@@ -239,23 +279,6 @@ class JoyPlot extends React.Component {
     });
   }
 
-  clearModal() {
-    this.setState({
-      modal: false
-    });
-  }
-
-  componentDidUpdate() {
-    this.renderAxes();
-  }
-
-  renderAxes() {
-    const xAxis = d3.axisTop();
-
-    xAxis.scale(this.state.xScale);
-    d3.select(this.xAxisRef.current).call(xAxis);
-  }
-
   render() {
     const dimensions = this.state.dimensions;
     const rectcount = this.state.rectCount;
@@ -280,13 +303,17 @@ class JoyPlot extends React.Component {
       });
 
       function calcWaveRects(genre, count) {
-        // console.log(genre);
         return d3.range(count).map((rect, ind) => {
+          // console.log(rect);
           const x = genre.xScale(rect);
           const width = genre.xScale.bandwidth();
           const y = genre.yScale(x);
           const height = y * 2;
           const id = genre.key + "-" + ind;
+
+          const cScale = chroma.scale("PuBuGn");
+          const color = cScale(genre.colorScale(x)).hex();
+          // const color = this.state.globalYScale();
 
           // console.log(y);
 
@@ -295,7 +322,8 @@ class JoyPlot extends React.Component {
             width,
             y,
             height,
-            id
+            id,
+            color
           };
         });
       }
@@ -311,6 +339,7 @@ class JoyPlot extends React.Component {
                 y={empty ? -noValue / 2 : -rect.y}
                 width={rect.width}
                 height={empty ? noValue : rect.height}
+                fill={rect.color}
               />
             </g>
           );
@@ -319,16 +348,6 @@ class JoyPlot extends React.Component {
     }
 
     const data = this.state.data;
-    // const modal = select => {
-    //   if (select) {
-    //     return (
-    //       <DetailsModal
-    //         exitFunc={this.clearModal}
-    //         selectedData={this.state.selection}
-    //       />
-    //     );
-    //   }
-    // };
 
     if (data) {
       return (

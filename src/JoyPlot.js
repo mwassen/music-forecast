@@ -191,16 +191,7 @@ class JoyPlot extends React.Component {
 
   componentDidMount() {
     this.renderAxes();
-
     this.renderBrushes();
-
-    // Creates a brush for each genre in dataset
-  }
-
-  clearModal() {
-    this.setState({
-      modal: false
-    });
   }
 
   componentDidUpdate() {
@@ -276,6 +267,12 @@ class JoyPlot extends React.Component {
         });
 
       currentBrush.call(genreBrush);
+    });
+  }
+
+  clearModal() {
+    this.setState({
+      modal: false
     });
   }
 

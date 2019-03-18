@@ -22,7 +22,7 @@ class SeekZone extends Component {
         searchText: input
       },
       () => {
-        // Callback after updating state - queries the SongKick API
+        // Callback after updating state - queries the Heroku API
         const query = this.state.searchText;
         if (query !== "") {
           const URL = "https://music-forecast.herokuapp.com/locations/" + query;

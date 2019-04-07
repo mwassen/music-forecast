@@ -1,6 +1,6 @@
 import React from "react";
 import * as d3 from "d3";
-import "./JoyPlot.css";
+import "./DataVisuals.css";
 import { Trail, animated } from "react-spring/renderprops";
 import DetailsModal from "./DetailsModal";
 import chroma from "chroma-js";
@@ -32,9 +32,9 @@ class JoyPlot extends React.Component {
 
     const margin = {
       top: 30,
-      right: window.innerWidth / 20,
+      right: window.innerWidth / 8,
       bottom: 30,
-      left: window.innerWidth / 20 > 100 ? window.innerWidth : 100
+      left: window.innerWidth / 8 > 120 ? window.innerWidth / 8 : 120
     };
     const width =
       window.innerWidth - window.innerWidth / 20 - margin.left - margin.right;
@@ -202,6 +202,9 @@ class JoyPlot extends React.Component {
   renderAxes() {
     const xAxis = d3.axisTop();
 
+    // Determine responsive amount of ticks by window width
+    xAxis.ticks(window.innerWidth / 100);
+
     xAxis.scale(this.state.xScale);
     d3.select(this.xAxisRef.current).call(xAxis);
   }
@@ -308,7 +311,7 @@ class JoyPlot extends React.Component {
           const height = y * 2;
           const id = genre.key + "-" + ind;
 
-          const cScale = chroma.scale("PuBuGn");
+          const cScale = chroma.scale("GnBu");
           const color = cScale(genre.colorScale(x)).hex();
           // const color = this.state.globalYScale();
 

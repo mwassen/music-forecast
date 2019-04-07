@@ -6,7 +6,7 @@ class LoadingAnimation extends Component {
     if (!this.props.active) return null;
     return (
       <div>
-        <ScaleLoader color="white" />
+        <ScaleLoader color="rgb(50, 50, 50)" />
         {/* <p>( loading... this might take a while )</p> */}
       </div>
     );

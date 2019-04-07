@@ -2,6 +2,7 @@
   "name": "music-forecast",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://mswsn.io/musicforecast",
   "dependencies": {
     "chroma-js": "^2.0.3",
     "d3": "^5.8.2",

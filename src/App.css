@@ -2,7 +2,7 @@
   text-align: center;
   min-height: 100vh;
   width: 100vw;
-  color: white;
+  color: rgb(50, 50, 50);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -19,7 +19,7 @@ p {
 
 .App-logo {
   /* animation: App-logo-spin infinite 20s linear; */
-  pointer-events: none;
+  cursor: pointer;
   user-select: none;
   height: 75px;
   stroke-miterlimit: 10;
@@ -34,10 +34,10 @@ p {
   font-size: calc(10px + 2vmin);
   color: white;
 }
-
+/* 
 .App-link {
   color: #61dafb;
-}
+} */
 
 .data-visuals {
   /* padding-top: 20px; */

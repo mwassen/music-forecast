@@ -3,17 +3,33 @@ import logo from "./logo.svg";
 import "./App.css";
 import SeekZone from "./SeekZone";
 import LoadingAnimation from "./LoadingAnimation";
-import JoyPlot from "./JoyPlot";
+import JoyPlot from "./DataVisuals";
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
       location: null,
-      loading: false,
+      loading: true,
+      ready: false,
       stats: null
     };
     this.locationSearch = this.locationSearch.bind(this);
+    this.homeReset = this.homeReset.bind(this);
+  }
+
+  componentDidMount() {
+    console.log("sent");
+    const URL = "https://music-forecast.herokuapp.com/status/";
+
+    fetch(URL).then(response => {
+      if (response.status === 200) {
+        this.setState({
+          loading: false,
+          ready: true
+        });
+      }
+    });
   }
 
   locationSearch(locationId, string) {
@@ -37,26 +53,42 @@ class App extends Component {
       });
   }
 
-  render() {
-    function showViz(data, location) {
-      if (data) {
-        return (
-          <div className="data-visuals">
-            <JoyPlot dataSet={data} location={location} />
-          </div>
-        );
-      }
-    }
+  homeReset() {
+    this.setState({
+      location: null,
+      loading: false,
+      stats: null
+    });
+  }
 
+  render() {
     return (
       <div className="App">
         <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
+          <img
+            src={logo}
+            className="App-logo"
+            alt="logo"
+            onClick={this.homeReset}
+          />
         </header>
-        <SeekZone locationSearch={this.locationSearch} />
-        <div className="locationName">{this.state.location}</div>
-        <LoadingAnimation active={this.state.loading} />
-        {showViz(this.state.stats, this.state.location)}
+        {this.state.ready ? (
+          <div>
+            <SeekZone locationSearch={this.locationSearch} />
+            <div className="locationName">{this.state.location}</div>
+            <LoadingAnimation active={this.state.loading} />
+            {this.state.stats && (
+              <div className="data-visuals">
+                <JoyPlot
+                  dataSet={this.state.stats}
+                  location={this.state.location}
+                />
+              </div>
+            )}
+          </div>
+        ) : (
+          <LoadingAnimation active={this.state.loading} />
+        )}
       </div>
     );
   }

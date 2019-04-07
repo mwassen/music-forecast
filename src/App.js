@@ -76,7 +76,10 @@ class App extends Component {
           <div>
             <SeekZone locationSearch={this.locationSearch} />
             <div className="locationName">{this.state.location}</div>
-            <LoadingAnimation active={this.state.loading} />
+            <LoadingAnimation
+              active={this.state.loading}
+              text="retrieving results"
+            />
             {this.state.stats && (
               <div className="data-visuals">
                 <JoyPlot
@@ -87,7 +90,10 @@ class App extends Component {
             )}
           </div>
         ) : (
-          <LoadingAnimation active={this.state.loading} />
+          <LoadingAnimation
+            active={this.state.loading}
+            text="contacting server"
+          />
         )}
       </div>
     );

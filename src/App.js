@@ -19,7 +19,6 @@ class App extends Component {
   }
 
   componentDidMount() {
-    console.log("sent");
     const URL = "https://music-forecast.herokuapp.com/status/";
 
     fetch(URL).then(response => {
@@ -57,8 +56,10 @@ class App extends Component {
     this.setState({
       location: null,
       loading: false,
+      ready: false,
       stats: null
     });
+    this.componentDidMount();
   }
 
   render() {
@@ -80,13 +81,19 @@ class App extends Component {
               active={this.state.loading}
               text="retrieving results"
             />
-            {this.state.stats && (
+            {this.state.stats ? (
               <div className="data-visuals">
                 <JoyPlot
                   dataSet={this.state.stats}
                   location={this.state.location}
                 />
               </div>
+            ) : (
+              <p>
+                (7 April 2019) note: The entire world is not in the midst of
+                some dreamy latvian trippy sludge metal takeover, the last.fm
+                API is currently somewhat broken...
+              </p>
             )}
           </div>
         ) : (

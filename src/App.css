@@ -1,6 +1,6 @@
 .App {
   text-align: center;
-  min-height: 100vh;
+  height: 100vh;
   width: 100vw;
   color: rgb(50, 50, 50);
   display: flex;
@@ -65,4 +65,16 @@ p {
 
 #bug-note {
   width: 300px;
+}
+
+#logo-padding {
+  flex-grow: 1;
+}
+
+#mswsn-logo {
+  /* position: absolute;
+  bottom: 0;
+  transform: translate(-50%, 0); */
+  margin: 20px 0 20px 0;
+  height: 20px;
 }

@@ -39,6 +39,12 @@ p {
   color: #61dafb;
 } */
 
+#main-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .data-visuals {
   /* padding-top: 20px; */
 }
@@ -47,4 +53,16 @@ p {
   margin: 20px 0 20px 0;
   font-weight: 900;
   font-size: 18px;
+}
+
+#notes {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+#bug-note {
+  width: 300px;
 }

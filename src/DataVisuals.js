@@ -311,7 +311,7 @@ class JoyPlot extends React.Component {
           const height = y * 2;
           const id = genre.key + "-" + ind;
 
-          const cScale = chroma.scale("GnBu");
+          const cScale = chroma.scale(["6d76af", "ee7943"]);
           const color = cScale(genre.colorScale(x)).hex();
           // const color = this.state.globalYScale();
 

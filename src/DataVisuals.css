@@ -28,7 +28,7 @@ svg {
 a {
   color: inherit;
   text-decoration: inherit;
-  margin-bottom: 20px;
+  /* margin-bottom: 20px; */
 }
 
 .modal-overlay {
@@ -51,7 +51,7 @@ a {
   height: 500px;
   background-color: rgb(209, 209, 209);
   border-radius: 1%;
-  padding: 0px 20px 20px 20px;
+  padding: 0px 20px 0px 20px;
   box-shadow: 0px 0px 25px rgba(0, 0, 0, 0.15);
 }
 
@@ -67,14 +67,33 @@ a {
 }
 
 .close-btn:hover {
-  fill: #a6bddb;
+  fill: #6d76af;
   transition: all 0.2s ease;
+}
+
+#modal-footer {
+  grid-row: 3;
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+#songkick-logo {
+  height: 25px;
+  fill: grey;
+  transition: fill 0.4s;
+}
+
+#songkick-logo:hover {
+  fill: #6d76af;
 }
 
 .modal-container {
   /* margin: 20px 20px 20px 20px; */
   display: grid;
-  grid-template-rows: 80px auto;
+  grid-template-rows: 80px auto 40px;
   height: inherit;
   width: 80vw;
   max-width: 500px;
@@ -117,6 +136,7 @@ a {
 
 .event-box {
   padding: 10px 10px 10px 10px;
+  margin-bottom: 20px;
   background-color: white;
   border-radius: 3px;
   cursor: pointer;
@@ -124,7 +144,7 @@ a {
 }
 
 .event-box:hover {
-  background-color: #a6bddb;
+  background-color: #6d76af41;
   transition: all 0.2s ease;
 }
 

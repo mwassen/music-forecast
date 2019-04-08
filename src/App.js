@@ -14,11 +14,16 @@ class App extends Component {
       ready: false,
       stats: null
     };
+    this.wakeUpServer = this.wakeUpServer.bind(this);
     this.locationSearch = this.locationSearch.bind(this);
     this.homeReset = this.homeReset.bind(this);
   }
 
   componentDidMount() {
+    this.wakeUpServer();
+  }
+
+  wakeUpServer() {
     const URL = "https://music-forecast.herokuapp.com/status/";
 
     fetch(URL).then(response => {
@@ -59,7 +64,7 @@ class App extends Component {
       ready: false,
       stats: null
     });
-    this.componentDidMount();
+    this.wakeUpServer();
   }
 
   render() {
@@ -74,7 +79,7 @@ class App extends Component {
           />
         </header>
         {this.state.ready ? (
-          <div>
+          <div id="main-content">
             <SeekZone locationSearch={this.locationSearch} />
             <div className="locationName">{this.state.location}</div>
             <LoadingAnimation
@@ -88,12 +93,14 @@ class App extends Component {
                   location={this.state.location}
                 />
               </div>
-            ) : (
-              <p>
-                (7 April 2019) note: The entire world is not in the midst of
-                some dreamy latvian trippy sludge metal takeover, the last.fm
-                API is currently somewhat broken...
-              </p>
+            ) : this.state.loading ? null : (
+              <div id="notes">
+                <p id="bug-note">
+                  (7 April 2019) note: The entire world is not in the midst of
+                  some dreamy latvian trippy sludge metal takeover, the last.fm
+                  API is currently somewhat broken...
+                </p>
+              </div>
             )}
           </div>
         ) : (

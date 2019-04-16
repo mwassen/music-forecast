@@ -97,11 +97,11 @@ class App extends Component {
               </div>
             ) : this.state.loading ? null : (
               <div id="notes">
-                <p id="bug-note">
+                {/* <p id="bug-note">
                   (7 April 2019) note: The entire world is not in the midst of
                   some dreamy latvian trippy sludge metal takeover, the last.fm
                   API is currently somewhat broken...
-                </p>
+                </p> */}
               </div>
             )}
           </div>
@@ -111,7 +111,6 @@ class App extends Component {
             text="contacting server"
           />
         )}
-
         <div id="logo-padding" />
         <a href="../">
           <svg

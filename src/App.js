@@ -97,6 +97,16 @@ class App extends Component {
               </div>
             ) : this.state.loading ? null : (
               <div id="notes">
+                <div id="how-to">
+                  <h4>How to use:</h4>
+                  <ul id="how-to-steps">
+                    <li>Search for a city</li>
+                    <li>The top 20 genres in that location are returned</li>
+                    <li>
+                      Click and drag to see the shows in the selected timeframe
+                    </li>
+                  </ul>
+                </div>
                 {/* <p id="bug-note">
                   (7 April 2019) note: The entire world is not in the midst of
                   some dreamy latvian trippy sludge metal takeover, the last.fm

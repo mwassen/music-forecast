@@ -56,6 +56,7 @@ p {
 }
 
 #notes {
+  margin-top: 20px;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -63,8 +64,19 @@ p {
   justify-content: center;
 }
 
-#bug-note {
-  width: 300px;
+#how-to {
+  width: 90vw;
+  max-width: 400px;
+  font-size: 12px;
+}
+
+#how-to-steps {
+  text-align: left;
+  list-style-type: decimal;
+}
+
+li {
+  margin-bottom: 10px;
 }
 
 #logo-padding {
@@ -76,5 +88,5 @@ p {
   bottom: 0;
   transform: translate(-50%, 0); */
   margin: 20px 0 20px 0;
-  height: 20px;
+  height: 15px;
 }

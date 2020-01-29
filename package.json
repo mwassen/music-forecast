@@ -2,7 +2,7 @@
   "name": "music-forecast",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://mswsn.io/musicforecast",
+  "homepage": "https://mwassen.github.io/music-forecast",
   "dependencies": {
     "chroma-js": "^2.0.3",
     "d3": "^5.8.2",
@@ -10,7 +10,7 @@
     "react": "^16.8.4",
     "react-dom": "^16.8.4",
     "react-modal": "^3.8.1",
-    "react-scripts": "^2.1.5",
+    "react-scripts": "^3.3.0",
     "react-spinners": "^0.5.3",
     "react-spring": "^8.0.11"
   },
@@ -21,7 +21,8 @@
     "eject": "react-scripts eject",
     "format": "prettier --write \"src/**/*.{js,jsx,css,json}\"",
     "format:check": "prettier --list-different \"src/**/*.{js,jsx,css,json}\"",
-    "lint": "eslint \"src/**/*.{js,jsx}\""
+    "lint": "eslint \"src/**/*.{js,jsx}\"",
+    "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -38,6 +39,7 @@
     "eslint-plugin-jsx-a11y": "^6.2.1",
     "eslint-plugin-prettier": "^3.0.1",
     "eslint-plugin-react": "^7.12.4",
+    "gh-pages": "^2.2.0",
     "prettier": "^1.16.4"
   }
 }
